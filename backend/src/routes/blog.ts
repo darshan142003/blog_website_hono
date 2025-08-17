@@ -1,7 +1,8 @@
 import { Hono } from 'hono'
 import { PrismaClient } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
-
+import { blogInput } from '@darsh777/medium-common'
+import { blogUpdate } from '@darsh777/medium-common'
 import { decode, sign, verify } from 'hono/jwt'
 
 
@@ -45,6 +46,11 @@ blogRouter.post('/', async (c) => {
         datasourceUrl: c.env.DATABASE_URL,
     }).$extends(withAccelerate())
 
+    const { success } = blogInput.safeParse(body);
+    if (!success) {
+        c.status(403);
+        return c.json({ error: "Invalid format" })
+    }
 
     const blog = await prisma.post.create({
         data: {
@@ -67,6 +73,13 @@ blogRouter.put('/', async (c) => {
     const prisma = new PrismaClient({
         datasourceUrl: c.env.DATABASE_URL,
     }).$extends(withAccelerate())
+
+    const { success } = blogInput.safeParse(body);
+
+    if (!success) {
+        c.status(403)
+        return c.json({ error: "Invalid Format" });
+    }
 
     const blog = await prisma.post.update({
         where: {
