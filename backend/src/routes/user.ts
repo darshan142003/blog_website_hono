@@ -31,9 +31,9 @@ userRouter.post('/signup', async (c) => {
         })
 
         const token = await sign({ id: user.id }, "secret");
-        return c.json({
-            jwt: token
-        })
+        return c.text(
+            token
+        )
     } catch (e) {
         console.error("Signup error:", e); // Helps you debug
         c.status(400); // Use 400 for bad request
@@ -64,7 +64,9 @@ userRouter.post('/signin', async (c) => {
         }
 
         const token = await sign({ id: user.id }, "secret");
-        return c.json({ jwt: token });
+        return c.text(
+            token
+        )
     } catch (e) {
         c.status(403);
         return c.json({ error: "Invalid" })
