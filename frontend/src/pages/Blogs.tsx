@@ -1,31 +1,49 @@
 import { AppBar } from "../components/AppBar"
 import { BlogCard } from "../components/BlogCard"
+import { BlogSkeleton } from "../components/BlogSkeleton";
+import { useBlogs } from "../hooks"
 
 export const Blogs = () => {
+
+    const { loading, blogs } = useBlogs();
+
+    if (loading) {
+        return <div>
+            <AppBar />
+            <div className="flex justify-center">
+                <div>
+                    <BlogSkeleton />
+                    <BlogSkeleton />
+                    <BlogSkeleton />
+                    <BlogSkeleton />
+
+                </div>
+            </div>
+        </div>
+    }
+
     return (
         <div>
             <AppBar />
 
             <div className="flex justify-center">
                 <div className=" max-w-xl">
-                    <BlogCard
-                        authorName="darshan"
-                        title="How an Ugly Single-Page Website makes $5000 a month with Affiliate Marketing"
-                        content="No need to create a fancy and modern website with hundreds of pages to make money online. -Making money online is the dream for man nowadays "
-                        publishedDate=" 27 feb 2025"
-                    />
-                    <BlogCard
-                        authorName="darshan"
-                        title="How an Ugly Single-Page Website makes $5000 a month with Affiliate Marketing"
-                        content="No need to create a fancy and modern website with hundreds of pages to make money online. -Making money online is the dream for man nowadays "
-                        publishedDate=" 27 feb 2025"
-                    />
-                    <BlogCard
-                        authorName="darshan"
-                        title="How an Ugly Single-Page Website makes $5000 a month with Affiliate Marketing"
-                        content="No need to create a fancy and modern website with hundreds of pages to make money online. -Making money online is the dream for man nowadays "
-                        publishedDate=" 27 feb 2025"
-                    />
+
+
+                    {blogs.map(blog => {
+                        return (
+                            <BlogCard
+                                key={blog.id}
+                                id={blog.id}
+                                authorName={blog.author.name || "Anonymous"}
+                                title={blog.title}
+                                content={blog.content}
+                                publishedDate="27 feb 2025"
+                            />
+                        );
+                    })}
+
+
                 </div>
             </div>
         </div>
